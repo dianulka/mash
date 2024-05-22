@@ -165,10 +165,10 @@ class mashVisitorCustom(mashVisitor):
                 return None
             value = self.variables[assigned_var_name]["value"]
             if var_type == "int_var" and not isinstance(value, int):
-                print(f"Error: Variable '{var_name}' must be assigned an integer.", file=sys.stderr)
+                print(f"Error: Variable '{var_name}' must be assigned an integer.", sys.stderr)
                 return None
             elif var_type == "string_var" and not isinstance(value, str):
-                print(f"Error: Variable '{var_name}' must be assigned a string.", file=sys.stderr)
+                print(f"Error: Variable '{var_name}' must be assigned a string.", sys.stderr)
                 return None
             self.variables[var_name]["value"] = value
 
@@ -184,17 +184,57 @@ class mashVisitorCustom(mashVisitor):
         if ctx.IDENTIFIER(1):
             assigned_var_name = ctx.IDENTIFIER(1).getText()
             if assigned_var_name not in self.variables:
-                print(f"Error: Variable '{assigned_var_name}' is not declared.", file=sys.stderr)
+                print(f"Error: Variable '{assigned_var_name}' is not declared.", sys.stderr)
                 return None
             value = self.variables[assigned_var_name]["value"]
         else:
             value = self.visit(ctx.expression())
 
         if var_type == "int_var" and not isinstance(value, int):
-            print(f"Error: Variable '{var_name}' must be assigned an integer.", file=sys.stderr)
+            print(f"Error: Variable '{var_name}' must be assigned an integer.", sys.stderr)
             return None
         elif var_type == "string_var" and not isinstance(value, str):
-            print(f"Error: Variable '{var_name}' must be assigned a string.", file=sys.stderr)
+            print(f"Error: Variable '{var_name}' must be assigned a string.", sys.stderr)
             return None
         self.variables[var_name]["value"] = value
         return value
+
+    def visitWhile_statement(self, ctx: mashParser.While_statementContext):
+        while self.visit(ctx.logical_expression()):
+            for statement in ctx.statement():
+                self.visit(statement)
+        return None
+
+    def visitFor_statement(self, ctx: mashParser.For_statementContext):
+        self.visit(ctx.assignment(0))
+
+        while self.visit(ctx.logical_expression()):
+            for statement in ctx.statement():
+                self.visit(statement)
+
+            self.visit(ctx.assignment(1))
+
+        return None
+
+    # def visitIf_statement(self, ctx: mashParser.If_statementContext):
+    #     conditions = []
+    #     statements = []
+    #     else_statement = None
+    #
+    #     for i in range(len(ctx.logical_expression())):
+    #         conditions.append(ctx.logical_expression(i))
+    #         statements.append(ctx.statement(i))
+    #
+    #     # Check if there is an else statement by checking if the number of statements is greater than the number of conditions
+    #     if len(ctx.statement()) > len(ctx.logical_expression()):
+    #         else_statement = ctx.statement(len(ctx.statement()) - 1)
+    #
+    #     for i in range(len(conditions)):
+    #         if self.visit(conditions[i]):
+    #             for statement in statements[i].statement():
+    #                 self.visit(statement)
+    #             return
+    #
+    #     if else_statement:
+    #         for statement in else_statement.if_statement():
+    #             self.visit(statement)
