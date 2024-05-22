@@ -19,3 +19,22 @@ echo x
 
 echo $((2+x))
 echo x<5
+
+int_var counter = 0
+
+while (counter < 5) {
+    echo counter
+    counter = counter + 1
+}
+
+echo "Done"
+
+int_var i
+
+# for(i=0; i<5; i=i+1) nie dziala :(
+
+for(i=0; i<5; i=i+1)  {
+    echo i
+}
+
+echo "Done"
