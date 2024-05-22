@@ -2,7 +2,8 @@ grammar mash;
 
 program : statement* EOF;
 
-statement : echo_function | var_declar | assignment;
+// dodane if_statement | while_statement | for_statement
+statement : echo_function | var_declar | assignment | if_statement | while_statement | for_statement;
 
 echo_function : 'echo' (expression | IDENTIFIER);
 
@@ -37,9 +38,21 @@ comparison_expression : arithmetic_expression ('<' | '>' | '==' | '!=') arithmet
                       | IDENTIFIER ('<' | '>' | '==' | '!=') IDENTIFIER;
 
 var_declar : type IDENTIFIER ('=' (expression | IDENTIFIER))? ;
+
 type : 'string_var' | 'int_var';
 
 assignment : IDENTIFIER '=' (expression | IDENTIFIER);
+
+///////////////////////////////////////////////////////
+while_statement : 'while' '(' logical_expression ')' '{' statement* '}';
+
+for_statement : 'for' '(' assignment ';' logical_expression ';' assignment ')' '{' statement* '}';
+
+if_statement : 'if' '(' logical_expression ')' '{' statement* '}'
+             ( 'elif' '(' logical_expression ')' '{' statement* '}' )*
+             ( 'else' '{' statement* '}' )?;
+
+/////////////////////////////////////////////////////
 
 INTEGER : [0-9]+;
 IDENTIFIER : [a-zA-Z_][a-zA-Z0-9_]*;
