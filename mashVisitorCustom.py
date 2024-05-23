@@ -215,6 +215,23 @@ class mashVisitorCustom(mashVisitor):
             self.visit(ctx.assignment(1))
 
         return None
+        
+
+    def visitIf_statement(self, ctx: mashParser.If_statementContext):
+        if self.visit(ctx.logical_expression()):
+            for statement in ctx.statement():
+                self.visit(statement)
+        else:
+            for elifCtx in ctx.elif_block():
+                if self.visit(elifCtx.logical_expression()):
+                    for statement in elifCtx.statement():
+                        self.visit(statement)
+                    return None
+            if ctx.else_block():
+                for statement in ctx.else_block().statement():
+                    self.visit(statement)
+        return None
+
 
     # def visitIf_statement(self, ctx: mashParser.If_statementContext):
     #     conditions = []
