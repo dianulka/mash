@@ -48,9 +48,11 @@ while_statement : 'while' '(' logical_expression ')' '{' statement* '}';
 
 for_statement : 'for' '(' assignment ';' logical_expression ';' assignment ')' '{' statement* '}';
 
-if_statement : 'if' '(' logical_expression ')' '{' statement* '}'
-             ( 'elif' '(' logical_expression ')' '{' statement* '}' )*
-             ( 'else' '{' statement* '}' )?;
+if_statement : 'if' '(' logical_expression ')' '{' statement* '}' elif_block* else_block?;
+
+elif_block : 'elif' '(' logical_expression ')' '{' statement* '}';
+
+else_block : 'else' '{' statement* '}';
 
 /////////////////////////////////////////////////////
 
